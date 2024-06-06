@@ -1,6 +1,6 @@
-import { Transactions } from "./types/Transactions";
+import { Transaction } from "./types/Transaction";
 
-const mockTransactions: Transactions[] = [
+export const mockTransactions: Transaction[] = [
   {
     date: "1205884800000",
     amount: 8592,
