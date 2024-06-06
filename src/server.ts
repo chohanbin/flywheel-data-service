@@ -35,6 +35,15 @@ export const startServer = async () => {
     listen: { port: 4000 },
   });
 
+  const exitSignals = ["SIGTERM", "SIGINT"];
+  exitSignals.forEach((signal) => {
+    process.on(signal, async () => {
+      console.log(`Received ${signal}`);
+      await analyticsDS.close();
+      process.exit(0);
+    });
+  });
+
   console.log(`🛞🚀 Flywheel Data Service ready at: ${url}`);
 };
 

@@ -21,6 +21,12 @@ export default class AnalyticsDataSource {
     }
   }
 
+  public async close(): Promise<void> {
+    await this.client.close();
+    this.isConnected = false;
+    console.log("MongoDB connection closed");
+  }
+
   public getCollection(collectionName: string) {
     if (!this.isConnected) {
       throw new Error("MongoDB connection is not established");
