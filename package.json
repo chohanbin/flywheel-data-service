@@ -7,10 +7,16 @@
     "compile": "tsc",
     "start": "npm run compile && node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "eslint --fix {src,test}/**/*.{js,ts,jsx,tsx} --no-error-on-unmatched-pattern",
+    "style": "prettier --write {src,test}/**/* ./*.{json,*.json} !package-lock.json -u --no-error-on-unmatched-pattern"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "{src,test}/**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write -u"
+    ],
+    "!**/*.{js,ts,jsx,tsx}": "prettier --write -u"
   },
   "keywords": [],
   "author": "",
