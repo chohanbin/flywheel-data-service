@@ -1,3 +1,13 @@
+type Customer {
+  username: String!
+  name: String!
+  email: String!
+  accounts: [Int!]
+  # TODO idea: Enable drilling into transactionBatch for each account.
+  #            That could enable an aggregate view of all transactions
+  #            for a customer in one GraphQL call.
+}
+
 type Transaction {
   date: String!
   amount: Int!
@@ -12,9 +22,10 @@ type TransactionBatch {
   transaction_count: Int!
   bucket_start_date: String!
   bucket_end_date: String!
-  transactions: [Transaction]
+  transactions: [Transaction!]
 }
 
 type Query {
+  customer(username: String!): Customer
   transactionBatch(accountId: Int!): TransactionBatch
 }
