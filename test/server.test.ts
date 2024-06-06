@@ -56,50 +56,52 @@ describe("server", () => {
   });
 
   describe("transactionBatch", () => {
-    it("returns the correct transaction batch for the given accountId", async () => {
-      const expectedBatch = seedCollTxns[0];
+    [...new Array(seedCollTxns.length)].forEach((_, index) => {
+      const expectedBatch = seedCollTxns[index];
       const expectedAccountId = expectedBatch.account_id;
 
-      const response = await testServer.executeOperation(
-        {
-          query: `#graphql
-            query GetTransactionBatch($accountId: Int!) {
-              transactionBatch(accountId: $accountId) {
-                account_id
-                transaction_count
-                bucket_start_date
-                bucket_end_date
-                transactions {
-                  date
-                  amount
-                  transaction_code
-                  symbol
-                  price
-                  total
+      it(`returns the correct transaction batch for the given accountId: ${expectedAccountId}`, async () => {
+        const response = await testServer.executeOperation(
+          {
+            query: `#graphql
+              query GetTransactionBatch($accountId: Int!) {
+                transactionBatch(accountId: $accountId) {
+                  account_id
+                  transaction_count
+                  bucket_start_date
+                  bucket_end_date
+                  transactions {
+                    date
+                    amount
+                    transaction_code
+                    symbol
+                    price
+                    total
+                  }
                 }
               }
-            }
-          `,
-          variables: { accountId: expectedAccountId },
-        },
-        {
-          contextValue: {
-            dataSources: {
-              analytics: testAnalyticsDS,
+            `,
+            variables: { accountId: expectedAccountId },
+          },
+          {
+            contextValue: {
+              dataSources: {
+                analytics: testAnalyticsDS,
+              },
             },
           },
-        },
-      );
+        );
 
-      assert(response.body.kind === "single");
-      expect(response.body.singleResult.errors).toBeUndefined();
-      const actualBatch = response.body.singleResult.data
-        ?.transactionBatch as TransactionBatch;
-      // Validate all fields except the hidden ID field.
-      for (const key in actualBatch) {
-        if (key === KEY_HIDDEN_OBJECT_ID) continue;
-        expect(actualBatch[key]).toEqual(expectedBatch[key]);
-      }
+        assert(response.body.kind === "single");
+        expect(response.body.singleResult.errors).toBeUndefined();
+        const actualBatch = response.body.singleResult.data
+          ?.transactionBatch as TransactionBatch;
+        // Validate all fields except the hidden ID field.
+        for (const key in actualBatch) {
+          if (key === KEY_HIDDEN_OBJECT_ID) continue;
+          expect(actualBatch[key]).toEqual(expectedBatch[key]);
+        }
+      });
     });
   });
 });
