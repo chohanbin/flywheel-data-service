@@ -1,6 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import fs from "fs";
-import { mockTransactions, resolvers } from "../src/resolvers";
+import { resolvers } from "../src/resolvers";
 import assert from "assert";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { MongoClient, Db, Collection, Document } from "mongodb";
@@ -53,30 +53,6 @@ describe("server", () => {
     } catch (err) {
       console.error("Failed to clean up test service:", err);
     }
-  });
-
-  describe("transactions", () => {
-    it("returns the mocked data of the correct format", async () => {
-      const response = await testServer.executeOperation({
-        query: `#graphql
-                    query ListTransactions {
-                        transactions {
-                            date
-                            amount
-                            transaction_code
-                            symbol
-                            price
-                            total
-                        }
-                    }
-                `,
-      });
-      assert(response.body.kind === "single");
-      expect(response.body.singleResult.errors).toBeUndefined();
-      expect(response.body.singleResult.data?.transactions).toEqual(
-        mockTransactions,
-      );
-    });
   });
 
   describe("transactionBatch", () => {

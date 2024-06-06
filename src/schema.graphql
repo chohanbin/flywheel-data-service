@@ -16,6 +16,5 @@ type TransactionBatch {
 }
 
 type Query {
-  transactions: [Transaction]
   transactionBatch(accountId: Int!): TransactionBatch
 }
