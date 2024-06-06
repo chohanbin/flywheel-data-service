@@ -1,4 +1,6 @@
-const mockTransactions = [
+import { Transactions } from "./types/Transactions";
+
+const mockTransactions: Transactions[] = [
   {
     date: "1205884800000",
     amount: 8592,
