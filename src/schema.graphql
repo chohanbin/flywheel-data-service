@@ -1,0 +1,12 @@
+type Transaction {
+  date: String!
+  amount: Int!
+  transaction_code: String!
+  symbol: String!
+  price: String!
+  total: String!
+}
+
+type Query {
+  transactions: [Transaction]
+}
