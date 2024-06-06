@@ -5,8 +5,10 @@ import assert from "assert";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { MongoClient, Db, Collection, Document } from "mongodb";
 import AnalyticsDataSource from "../src/datasources/analytics";
+import { seedCollCust } from "./seed/seed";
 import { seedCollTxns } from "./seed/seed";
 import { ContextValue } from "../src/server";
+import { Customer } from "../src/types/Customer";
 import { TransactionBatch } from "../src/types/Transaction";
 
 const typeDefs = fs.readFileSync("src/schema.graphql", "utf8");
@@ -101,6 +103,49 @@ describe("server", () => {
         for (const key in actualBatch) {
           if (key === KEY_HIDDEN_OBJECT_ID) continue;
           expect(actualBatch[key]).toEqual(expectedBatch[key]);
+        }
+      });
+    });
+  });
+
+  describe("customer", () => {
+    const indicesOfSeedCust = [...Array(seedCollCust.length).keys()];
+    indicesOfSeedCust.forEach((index) => {
+      const expectedCust = seedCollCust[index];
+      const expectedUsername = expectedCust.username;
+
+      it(`returns the correct customer for the given username: ${expectedUsername}`, async () => {
+        const response = await testServer.executeOperation(
+          {
+            query: `#graphql
+              query GetCustomer($username: String!) {
+                customer(username: $username) {
+                  username
+                  name
+                  email
+                  accounts
+                }
+              }
+            `,
+            variables: { username: expectedUsername },
+          },
+          {
+            contextValue: {
+              dataSources: {
+                analytics: testAnalyticsDS,
+              },
+            },
+          },
+        );
+
+        assert(response.body.kind === "single");
+        expect(response.body.singleResult.errors).toBeUndefined();
+        const actualCustomer = response.body.singleResult.data
+          ?.customer as Customer;
+        // Validate all fields except the hidden ID field.
+        for (const key in actualCustomer) {
+          if (key === KEY_HIDDEN_OBJECT_ID) continue;
+          expect(actualCustomer[key]).toEqual(expectedCust[key]);
         }
       });
     });

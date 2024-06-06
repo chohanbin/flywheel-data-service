@@ -1,4 +1,24 @@
+import { Customer } from "../../src/types/Customer";
 import { TransactionBatch } from "../../src/types/Transaction";
+
+export const seedCollCust: Customer[] = [
+  {
+    username: "appleseed",
+    name: "Johnny Appleseed",
+    address: "678 Orchard Lane, Apple Valley, CA 92307",
+    birthdate: new Date("1974-09-26").getTime().toString(),
+    email: "johnny@appleseed.com",
+    accounts: [987123, 345987],
+  },
+  {
+    username: "poppins",
+    name: "Mary Poppins",
+    address: "1600 Dream St, Los Angeles, CA 90028",
+    birthdate: new Date("1964-12-23").getTime().toString(),
+    email: "merry@poppins.net",
+    accounts: [246801, 777777, 999999, 111111],
+  },
+];
 
 export const seedCollTxns: TransactionBatch[] = [
   {
