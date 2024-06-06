@@ -7,6 +7,14 @@ type Transaction {
   total: String!
 }
 
-type Query {
+type TransactionBatch {
+  account_id: Int!
+  transaction_count: Int!
+  bucket_start_date: String!
+  bucket_end_date: String!
   transactions: [Transaction]
+}
+
+type Query {
+  transactionBatch(accountId: Int!): TransactionBatch
 }
