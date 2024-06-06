@@ -34,6 +34,27 @@ export default class AnalyticsDataSource {
     return this.db.collection(collectionName);
   }
 
+  // TODO idea: sort the transactions by date at the DB level,
+  //            so that the frontend won't have to before displaying to the user.
+  //            Something like this could work:
+  // collection.aggregate([
+  //     {
+  //         $match: {
+  //             account_id: accountId
+  //         }
+  //     },
+  //     {
+  //         $project: {
+  //             _id: 0,
+  //             transactions: {
+  //                 $sortArray: {
+  //                     input: "$transactions",
+  //                     sortBy: { date: 1 }
+  //                 }
+  //             }
+  //         }
+  //     }
+  // ])
   async transactionBatch(accountId: number) {
     const coll = this.getCollection(AnalyticsDataSource.collTxns);
     const txnBatch = await coll.findOne({ account_id: accountId });
