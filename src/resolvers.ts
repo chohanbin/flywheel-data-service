@@ -22,5 +22,8 @@ export const mockTransactions: Transaction[] = [
 export const resolvers = {
   Query: {
     transactions: () => mockTransactions,
+    transactionBatch: async (_, { accountId }, { dataSources }) => {
+      return await dataSources.analytics.transactionBatch(accountId);
+    },
   },
 };
