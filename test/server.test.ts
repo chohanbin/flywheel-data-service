@@ -56,7 +56,8 @@ describe("server", () => {
   });
 
   describe("transactionBatch", () => {
-    [...new Array(seedCollTxns.length)].forEach((_, index) => {
+    const indicesOfSeedBatches = [...Array(seedCollTxns.length).keys()];
+    indicesOfSeedBatches.forEach((index) => {
       const expectedBatch = seedCollTxns[index];
       const expectedAccountId = expectedBatch.account_id;
 
