@@ -10,7 +10,7 @@ Launch the GraphQL API service (at `localhost:4000` by default):
 
 Create `.env.local` file that specifies which MongoDB to target (Replace `<CONNECTION_STRING>` with the target DB URI, e.g. `'mongodb+srv://.../sample_analytics?...'` or `mongodb://localhost:27017`)
 
-- **NOTE**: This service is only compatible with MongoDB with the following schema: [Sample Analytics Dataset](https://www.mongodb.com/docs/atlas/sample-data/sample-analytics/)
+- **NOTE**: This service is compatible only with a MongoDB database with [Sample Analytics Dataset](https://www.mongodb.com/docs/atlas/sample-data/sample-analytics/) schema.
 
 ```shell
 DB_CONN_STRING=<CONNECTION_STRING>
@@ -19,9 +19,11 @@ DB_CONN_STRING=<CONNECTION_STRING>
 From the repo root directory, invoke:
 
 ```shell
-npm install
-npm start
+npm install   # Only needs to be run once.
+npm start     # Run every time the service needs to start.
 ```
+
+Shut down the service with `Ctrl + D`.
 
 ### Using docker
 
@@ -50,6 +52,76 @@ docker run -dp 127.0.0.1:4000:4000 \
 ```
 
 // ^TODO: Add instruction on how to allow this docker service to connect to mongodb://localhost:27017
+
+Shut down the service with:
+
+```shell
+docker ps | grep flywheel-data-service
+```
+
+Then run ([Explanation](https://docs.docker.com/get-started/03_updating_app/#remove-a-container-using-the-cli) of `docker rm -f`):
+
+```shell
+docker rm -f <target docker container ID>
+```
+
+# Supported GraphQL APIs
+
+This service exposes the content of a MongoDB database in [Sample Analytics Dataset](https://www.mongodb.com/docs/atlas/sample-data/sample-analytics/) schema.
+
+Currently, it supports fetching `customers` collection with `customer` query, and `transactions` collection with `transactionBatch` query, as shown below. For the official GraphQL schema, refer to [src/schema.graphql](https://github.com/chohanbin/flywheel-data-service/blob/main/src/schema.graphql)
+
+Visit <http://localhost:4000> from your browser, to open up [Apollo Sandbox](https://www.apollographql.com/docs/apollo-server/getting-started#step-8-execute-your-first-query) from where you can submit these GraphQL queries against your local `flywheel-data-service`.
+
+### Query: customer
+
+Operation (omit fields as desired):
+
+```graphql
+query GetCustomer($username: String!) {
+  customer(username: $username) {
+    username
+    name
+    email
+    accounts
+  }
+}
+```
+
+Variables (replace `appleseed` with your target `username`):
+
+```javascript
+{ "username": "appleseed" }
+```
+
+### Query: transactionBatch
+
+Operation (omit fields as desired):
+
+```graphql
+query GetTransactionBatch($accountId: Int!) {
+  transactionBatch(accountId: $accountId) {
+    account_id
+    transaction_count
+    bucket_start_date
+    bucket_end_date
+    transactions {
+      date
+      amount
+      transaction_code
+      symbol
+      price
+      total
+    }
+  }
+}
+```
+
+Variables (replace `123456` with your target `accountId`):
+
+```javascript
+{ "accountId": 123456 }
+```
 
 # How to run automated test
 
