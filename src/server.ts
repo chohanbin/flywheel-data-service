@@ -4,9 +4,6 @@ import fs from "fs";
 import { resolvers } from "./resolvers.js";
 import AnalyticsDataSource from "./datasources/analytics.js";
 import { config } from "dotenv";
-
-if (process.env.DB_CONN_STRING == null) config({ path: ".env.local" });
-
 const typeDefs = fs.readFileSync("src/schema.graphql", "utf8");
 
 export interface ContextValue {
@@ -14,6 +11,10 @@ export interface ContextValue {
     analytics: AnalyticsDataSource;
   };
 }
+
+// DB_CONN_STRING may be passed in as an in-line env variable with `docker run`.
+// Default to reading from .env.local if not provided.
+if (process.env.DB_CONN_STRING == null) config({ path: ".env.local" });
 
 export const startServer = async () => {
   const analyticsDS = new AnalyticsDataSource(process.env.DB_CONN_STRING);
