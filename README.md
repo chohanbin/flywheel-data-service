@@ -47,7 +47,7 @@ docker run -dp 127.0.0.1:4000:4000 \
   flywheel-data-service
 ```
 
-# ^TODO: Add instruction on how to allow this docker service to connect to mongodb://localhost:27017
+// ^TODO: Add instruction on how to allow this docker service to connect to mongodb://localhost:27017
 
 # How to run automated test
 
