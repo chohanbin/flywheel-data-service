@@ -8,11 +8,12 @@ import AnalyticsDataSource from "../src/datasources/analytics";
 import { seedCollCust } from "./seed/seed";
 import { seedCollTxns } from "./seed/seed";
 import { ContextValue } from "../src/server";
-import { Customer } from "../src/types/Customer";
+import { CustomerApiFormat } from "../src/types/Customer";
 import { TransactionBatch } from "../src/types/Transaction";
 
 const typeDefs = fs.readFileSync("src/schema.graphql", "utf8");
-const KEY_HIDDEN_OBJECT_ID = "_id";
+const ID_KEY_API_FORMAT = "id";
+const ID_KEY_DB_FORMAT = "_id";
 
 let testDbServer: MongoMemoryServer;
 let testDbClient: MongoClient;
@@ -101,7 +102,7 @@ describe("server", () => {
           ?.transactionBatch as TransactionBatch;
         // Validate all fields except the hidden ID field.
         for (const key in actualBatch) {
-          if (key === KEY_HIDDEN_OBJECT_ID) continue;
+          if (key === ID_KEY_DB_FORMAT) continue;
           expect(actualBatch[key]).toEqual(expectedBatch[key]);
         }
       });
@@ -112,14 +113,14 @@ describe("server", () => {
     const indicesOfSeedCust = [...Array(seedCollCust.length).keys()];
     indicesOfSeedCust.forEach((index) => {
       const expectedCust = seedCollCust[index];
-      const expectedUsername = expectedCust.username;
+      const expectedEmail = expectedCust.email;
 
-      it(`returns the correct customer for the given username: ${expectedUsername}`, async () => {
+      it(`returns the correct customer for the given email: ${expectedEmail}`, async () => {
         const response = await testServer.executeOperation(
           {
             query: `#graphql
-              query GetCustomer($username: String!) {
-                customer(username: $username) {
+              query GetCustomer($email: String!) {
+                customer(email: $email) {
                   username
                   name
                   email
@@ -127,7 +128,7 @@ describe("server", () => {
                 }
               }
             `,
-            variables: { username: expectedUsername },
+            variables: { email: expectedEmail },
           },
           {
             contextValue: {
@@ -140,12 +141,16 @@ describe("server", () => {
 
         assert(response.body.kind === "single");
         expect(response.body.singleResult.errors).toBeUndefined();
-        const actualCustomer = response.body.singleResult.data
-          ?.customer as Customer;
-        // Validate all fields except the hidden ID field.
-        for (const key in actualCustomer) {
-          if (key === KEY_HIDDEN_OBJECT_ID) continue;
-          expect(actualCustomer[key]).toEqual(expectedCust[key]);
+        const actualCust = response.body.singleResult.data
+          ?.customer as CustomerApiFormat;
+        for (const key in actualCust) {
+          if (key === ID_KEY_API_FORMAT) {
+            expect(actualCust[ID_KEY_API_FORMAT]).toEqual(
+              expectedCust[ID_KEY_DB_FORMAT],
+            );
+          } else {
+            expect(actualCust[key]).toEqual(expectedCust[key]);
+          }
         }
       });
     });

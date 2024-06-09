@@ -35,7 +35,7 @@ export default class AnalyticsDataSource {
     return this.db.collection(collectionName);
   }
 
-  async customer(username: string) {
+  async customer(email: string) {
     const coll = this.getCollection(AnalyticsDataSource.collCust);
     // TODO: In rare cases, a given username or email
     //       can resolve to multiple customers:
@@ -46,7 +46,7 @@ export default class AnalyticsDataSource {
     // understand whether these duplicates are allowed, and if so, in which case,
     // then handle fetching a unique customer properly.
     // (Perhaps by a combination of username and email, for example).
-    return await coll.findOne({ username: username });
+    return await coll.findOne({ email: email });
   }
 
   // TODO idea: sort the transactions by date at the DB level,

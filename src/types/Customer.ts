@@ -1,6 +1,6 @@
 import { AccountId } from "./Account";
 
-export type Customer = {
+type CustomerBaseSchema = {
   username: string;
   name: string;
   address: string;
@@ -8,3 +8,7 @@ export type Customer = {
   email: string;
   accounts: AccountId[];
 };
+
+export type CustomerApiFormat = { id: string } & CustomerBaseSchema;
+
+export type CustomerDbFormat = { _id: string } & CustomerBaseSchema;
