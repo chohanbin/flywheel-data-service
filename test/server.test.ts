@@ -113,14 +113,14 @@ describe("server", () => {
     const indicesOfSeedCust = [...Array(seedCollCust.length).keys()];
     indicesOfSeedCust.forEach((index) => {
       const expectedCust = seedCollCust[index];
-      const expectedUsername = expectedCust.username;
+      const expectedEmail = expectedCust.email;
 
-      it(`returns the correct customer for the given username: ${expectedUsername}`, async () => {
+      it(`returns the correct customer for the given email: ${expectedEmail}`, async () => {
         const response = await testServer.executeOperation(
           {
             query: `#graphql
-              query GetCustomer($username: String!) {
-                customer(username: $username) {
+              query GetCustomer($email: String!) {
+                customer(email: $email) {
                   username
                   name
                   email
@@ -128,7 +128,7 @@ describe("server", () => {
                 }
               }
             `,
-            variables: { username: expectedUsername },
+            variables: { email: expectedEmail },
           },
           {
             contextValue: {

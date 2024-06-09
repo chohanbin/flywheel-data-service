@@ -27,6 +27,6 @@ type TransactionBatch {
 }
 
 type Query {
-  customer(username: String!): Customer
+  customer(email: String!): Customer
   transactionBatch(accountId: Int!): TransactionBatch
 }

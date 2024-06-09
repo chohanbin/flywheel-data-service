@@ -78,8 +78,8 @@ Visit <http://localhost:4000> from your browser, to open up [Apollo Sandbox](htt
 Operation (omit fields as desired):
 
 ```graphql
-query GetCustomer($username: String!) {
-  customer(username: $username) {
+query GetCustomer($email: String!) {
+  customer(email: $email) {
     username
     name
     email
@@ -88,10 +88,10 @@ query GetCustomer($username: String!) {
 }
 ```
 
-Variables (replace `appleseed` with your target `username`):
+Variables (replace `appleseed` with your target `email`):
 
 ```javascript
-{ "username": "appleseed" }
+{ "email": "johnny@appleseed.com" }
 ```
 
 ### Query: transactionBatch

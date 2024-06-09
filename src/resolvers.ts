@@ -10,8 +10,8 @@ export function mapCustomerDbToApiFormat(customer: CustomerDbFormat) {
 
 export const resolvers = {
   Query: {
-    customer: async (_, { username }, { dataSources }) => {
-      const data = await dataSources.analytics.customer(username);
+    customer: async (_, { email }, { dataSources }) => {
+      const data = await dataSources.analytics.customer(email);
       return mapCustomerDbToApiFormat(data);
     },
     transactionBatch: async (_, { accountId }, { dataSources }) => {
