@@ -1,8 +1,9 @@
-import { Customer } from "../../src/types/Customer";
+import { CustomerDbFormat } from "../../src/types/Customer";
 import { TransactionBatch } from "../../src/types/Transaction";
 
-export const seedCollCust: Customer[] = [
+export const seedCollCust: CustomerDbFormat[] = [
   {
+    _id: "14f93429-c9b9-4582-9b9f-c3557504fcb5",
     username: "appleseed",
     name: "Johnny Appleseed",
     address: "678 Orchard Lane, Apple Valley, CA 92307",
@@ -11,6 +12,7 @@ export const seedCollCust: Customer[] = [
     accounts: [987123, 345987],
   },
   {
+    _id: "8e24c42d-8611-444f-aea2-b7203180d145",
     username: "poppins",
     name: "Mary Poppins",
     address: "1600 Dream St, Los Angeles, CA 90028",
