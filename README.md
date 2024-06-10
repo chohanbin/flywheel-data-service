@@ -6,6 +6,8 @@ The mighty Flywheel Trading app's GraphQL API service. Its primary purpose is to
 
 Launch the GraphQL API service (at `localhost:4000` by default):
 
+(To deploy the full stack application at once, please see https://github.com/chohanbin/flywheel-data-service)
+
 ### Using npm
 
 Create `.env.local` file that specifies which MongoDB to target (Replace `<CONNECTION_STRING>` with the target DB URI, e.g. `'mongodb+srv://.../sample_analytics?...'` or `mongodb://localhost:27017`)
@@ -45,8 +47,9 @@ docker build -t flywheel-data-service .
 Run a container (Replace `<CONNECTION_STRING>` with the target DB URI):
 
 ```shell
-docker run -dp 127.0.0.1:4000:4000 \
+docker run --name data-service \    # the name that this service will be known to other services on 'flywheel' network
   --network flywheel \
+  -dp 127.0.0.1:4000:4000 \
   -e DB_CONN_STRING='<CONNECTION_STRING>' \
   flywheel-data-service
 ```
